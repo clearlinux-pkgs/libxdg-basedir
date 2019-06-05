@@ -4,7 +4,7 @@
 #
 Name     : libxdg-basedir
 Version  : 1.2.0
-Release  : 1
+Release  : 2
 URL      : https://github.com/devnev/libxdg-basedir/archive/libxdg-basedir-1.2.0.zip
 Source0  : https://github.com/devnev/libxdg-basedir/archive/libxdg-basedir-1.2.0.zip
 Summary  : An implementation of the XDG Base Directory specification
