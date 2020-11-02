@@ -4,7 +4,7 @@
 #
 Name     : libxdg-basedir
 Version  : 1.2.0
-Release  : 2
+Release  : 3
 URL      : https://github.com/devnev/libxdg-basedir/archive/libxdg-basedir-1.2.0.zip
 Source0  : https://github.com/devnev/libxdg-basedir/archive/libxdg-basedir-1.2.0.zip
 Summary  : An implementation of the XDG Base Directory specification
@@ -14,6 +14,7 @@ Requires: libxdg-basedir-lib = %{version}-%{release}
 Requires: libxdg-basedir-license = %{version}-%{release}
 BuildRequires : doxygen
 BuildRequires : graphviz
+BuildRequires : perl
 
 %description
 No detailed description available
@@ -23,6 +24,7 @@ Summary: dev components for the libxdg-basedir package.
 Group: Development
 Requires: libxdg-basedir-lib = %{version}-%{release}
 Provides: libxdg-basedir-devel = %{version}-%{release}
+Requires: libxdg-basedir = %{version}-%{release}
 
 %description dev
 dev components for the libxdg-basedir package.
@@ -47,28 +49,37 @@ license components for the libxdg-basedir package.
 
 %prep
 %setup -q -n libxdg-basedir-libxdg-basedir-1.2.0
+cd %{_builddir}/libxdg-basedir-libxdg-basedir-1.2.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1540942843
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604353381
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %autogen --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1540942843
+export SOURCE_DATE_EPOCH=1604353381
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libxdg-basedir
-cp COPYING %{buildroot}/usr/share/package-licenses/libxdg-basedir/COPYING
+cp %{_builddir}/libxdg-basedir-libxdg-basedir-1.2.0/COPYING %{buildroot}/usr/share/package-licenses/libxdg-basedir/7b09743cfe3dca39cdc24ac6729753ac15662176
 %make_install
 
 %files
@@ -76,7 +87,8 @@ cp COPYING %{buildroot}/usr/share/package-licenses/libxdg-basedir/COPYING
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/basedir.h
+/usr/include/basedir_fs.h
 /usr/lib64/libxdg-basedir.so
 /usr/lib64/pkgconfig/libxdg-basedir.pc
 
@@ -87,4 +99,4 @@ cp COPYING %{buildroot}/usr/share/package-licenses/libxdg-basedir/COPYING
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/libxdg-basedir/COPYING
+/usr/share/package-licenses/libxdg-basedir/7b09743cfe3dca39cdc24ac6729753ac15662176
